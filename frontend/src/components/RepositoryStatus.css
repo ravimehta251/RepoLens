@@ -1,0 +1,179 @@
+.repo-status {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.status-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.repo-title {
+  flex: 1;
+}
+
+.repo-title h3 {
+  color: #333;
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
+.repo-link {
+  color: #667eea;
+  font-size: 12px;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.repo-link:hover {
+  color: #5568d3;
+  text-decoration: underline;
+}
+
+.btn-refresh {
+  width: 36px;
+  height: 36px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  background: white;
+  color: #667eea;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  flex-shrink: 0;
+}
+
+.btn-refresh:hover:not(:disabled) {
+  border-color: #667eea;
+  background: #f8f9ff;
+}
+
+.btn-refresh:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-refresh svg {
+  width: 18px;
+  height: 18px;
+}
+
+.btn-refresh .spinning {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.status-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.status-row label {
+  font-weight: 600;
+  color: #666;
+  font-size: 13px;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status-badge.status-ready {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status-badge.status-indexing {
+  background: #d1ecf1;
+  color: #0c5460;
+}
+
+.status-badge.status-pending {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.status-badge.status-failed {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.status-icon {
+  font-size: 14px;
+}
+
+.status-text {
+  font-weight: 600;
+}
+
+.chunk-count {
+  font-size: 14px;
+  font-weight: 600;
+  color: #667eea;
+}
+
+.status-message {
+  padding: 12px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  border-left: 4px solid;
+  animation: slideIn 0.2s ease-out;
+}
+
+.status-message.success {
+  background: #d4edda;
+  color: #155724;
+  border-left-color: #28a745;
+}
+
+.status-message.error {
+  background: #f8d7da;
+  color: #721c24;
+  border-left-color: #dc3545;
+}
+
+.status-message.info {
+  background: #d1ecf1;
+  color: #0c5460;
+  border-left-color: #17a2b8;
+}
+
+.auto-refresh-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+}
+
+.auto-refresh-toggle input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: #667eea;
+}
+
+.auto-refresh-toggle label {
+  font-size: 13px;
+  color: #666;
+  cursor: pointer;
+  margin: 0;
+}

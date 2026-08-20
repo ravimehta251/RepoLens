@@ -1,0 +1,48 @@
+spring:
+  application:
+    name: reposage
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        types:
+          PostgreSQLDialect: com.pgvector.hibernate.Vector
+    show-sql: false
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:reposage_db}
+    username: ${DB_USER:postgres}
+    password: ${DB_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+
+server:
+  port: ${SERVER_PORT:8080}
+
+github:
+  api-base: https://api.github.com
+  token: ${GITHUB_TOKEN:}
+  connect-timeout-ms: 10000
+  read-timeout-ms: 30000
+
+gemini:
+  api-key: ${GEMINI_API_KEY:}
+  api-base: https://generativelanguage.googleapis.com/v1beta/models
+  embedding-model: text-embedding-004
+  chat-model: gemini-1.5-flash
+  connect-timeout-ms: 10000
+  read-timeout-ms: 30000
+
+rag:
+  chunk-size: 500
+  chunk-overlap: 50
+  top-k: 5
+  cache-ttl-minutes: 60
+
+logging:
+  level:
+    root: INFO
+    com.reposage: DEBUG

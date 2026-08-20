@@ -1,0 +1,97 @@
+{
+  "info": {
+    "name": "RepoSage API",
+    "description": "Collection of RepoSage endpoints for testing",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Index Repository",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"githubUrl\": \"https://github.com/spring-projects/spring-boot\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/repos",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "repos"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Repository Status",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/api/repos/1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "repos", "1"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Query Repository",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"question\": \"How does Spring Boot handle dependency injection?\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/repos/1/query",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "repos", "1", "query"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Chunks",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/api/repos/1/chunks",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "repos", "1", "chunks"]
+        }
+      },
+      "response": []
+    }
+  ]
+}

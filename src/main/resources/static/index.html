@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RepoSage - GitHub Repository Q&A</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 900px;
+            padding: 40px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section h2 {
+            color: #667eea;
+            font-size: 18px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            color: #333;
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.2);
+        }
+
+        .btn-primary:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+            transform: translateY(-2px);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-indexing {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .status-ready {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-failed {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .info-box {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            border-radius: 6px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #555;
+            margin-bottom: 15px;
+        }
+
+        .response-box {
+            background: #f8f9fa;
+            border-radius: 6px;
+            padding: 20px;
+            margin-top: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .response-box h3 {
+            color: #333;
+            font-size: 16px;
+            margin-bottom: 12px;
+        }
+
+        .response-box p {
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 15px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .sources {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+
+        .sources h4 {
+            color: #333;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .source-item {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+
+        .source-path {
+            color: #667eea;
+            font-weight: 600;
+            word-break: break-all;
+        }
+
+        .source-lines {
+            color: #999;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .chunk-count {
+            color: #667eea;
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .repo-info {
+            background: #f0f4ff;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .repo-info.visible {
+            display: block;
+        }
+
+        .repo-info p {
+            color: #333;
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 RepoSage</h1>
+            <p>Ask questions about any GitHub repository using AI</p>
+        </div>
+
+        <!-- Step 1: Index Repository -->
+        <div class="section">
+            <h2>Step 1: Index Repository</h2>
+            <div class="info-box">
+                Paste a GitHub repository URL to index it. This process fetches code, chunks it, and creates embeddings for semantic search.
+            </div>
+            
+            <div class="form-group">
+                <label for="githubUrl">GitHub Repository URL</label>
+                <input 
+                    type="text" 
+                    id="githubUrl" 
+                    placeholder="https://github.com/owner/repo"
+                    value="https://github.com/spring-projects/spring-boot"
+                >
+            </div>
+
+            <div class="button-group">
+                <button class="btn-primary" id="indexBtn" onclick="indexRepository()">
+                    Index Repository
+                </button>
+                <button class="btn-secondary" id="statusBtn" onclick="checkStatus()" disabled>
+                    Check Status
+                </button>
+            </div>
+
+            <div id="indexMessage"></div>
+            <div id="repoInfo" class="repo-info"></div>
+        </div>
+
+        <!-- Step 2: Ask Questions -->
+        <div class="section">
+            <h2>Step 2: Ask Questions</h2>
+            <div class="info-box">
+                Once the repository is indexed (status = READY), you can ask questions about it. The system will retrieve relevant code snippets and generate answers.
+            </div>
+
+            <div class="form-group">
+                <label for="question">Your Question</label>
+                <textarea 
+                    id="question" 
+                    placeholder="e.g., How does Spring Boot handle dependency injection?"
+                    disabled
+                ></textarea>
+            </div>
+
+            <div class="button-group">
+                <button class="btn-primary" id="queryBtn" onclick="queryRepository()" disabled>
+                    Ask Question
+                </button>
+                <button class="btn-secondary" id="clearBtn" onclick="clearResults()">
+                    Clear Results
+                </button>
+            </div>
+
+            <div id="queryMessage"></div>
+        </div>
+
+        <!-- Results -->
+        <div class="section hidden" id="resultsSection">
+            <h2>Answer</h2>
+            <div class="response-box">
+                <h3>Response</h3>
+                <p id="answer"></p>
+                
+                <div class="sources" id="sourcesDiv">
+                    <h4>📚 Sources</h4>
+                    <div id="sources"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8080/api';
+        let currentRepoId = null;
+        let repoStatus = null;
+
+        // Auto-load repo ID from localStorage if available
+        window.addEventListener('load', () => {
+            const savedRepoId = localStorage.getItem('repoSageRepoId');
+            if (savedRepoId) {
+                currentRepoId = parseInt(savedRepoId);
+                document.getElementById('indexBtn').disabled = true;
+                document.getElementById('statusBtn').disabled = false;
+                checkStatus();
+            }
+        });
+
+        async function indexRepository() {
+            const url = document.getElementById('githubUrl').value.trim();
+            const messageDiv = document.getElementById('indexMessage');
+            
+            if (!url) {
+                showError(messageDiv, 'Please enter a GitHub URL');
+                return;
+            }
+
+            document.getElementById('indexBtn').disabled = true;
+            messageDiv.innerHTML = '<div class="info-box">Indexing repository<span class="loading"></span></div>';
+
+            try {
+                const response = await fetch(`${API_BASE}/repos`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ githubUrl: url })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    currentRepoId = data.data.repoId;
+                    localStorage.setItem('repoSageRepoId', currentRepoId);
+                    showSuccess(messageDiv, `Repository indexed with ID: ${currentRepoId}. Status: ${data.data.status}`);
+                    document.getElementById('statusBtn').disabled = false;
+                    
+                    // Check status in a few seconds
+                    setTimeout(checkStatus, 2000);
+                } else {
+                    showError(messageDiv, data.error || 'Failed to index repository');
+                    document.getElementById('indexBtn').disabled = false;
+                }
+            } catch (error) {
+                showError(messageDiv, 'Error: ' + error.message);
+                document.getElementById('indexBtn').disabled = false;
+            }
+        }
+
+        async function checkStatus() {
+            if (!currentRepoId) {
+                showError(document.getElementById('indexMessage'), 'No repository indexed yet');
+                return;
+            }
+
+            const messageDiv = document.getElementById('indexMessage');
+            const repoInfoDiv = document.getElementById('repoInfo');
+            
+            try {
+                const response = await fetch(`${API_BASE}/repos/${currentRepoId}`);
+                const data = await response.json();
+
+                if (data.success) {
+                    const repo = data.data;
+                    repoStatus = repo.status;
+                    
+                    // Update repo info
+                    repoInfoDiv.innerHTML = `
+                        <p><strong>Repository:</strong> ${repo.owner}/${repo.name}</p>
+                        <p><strong>Status:</strong> <span class="status-badge status-${repo.status.toLowerCase()}">${repo.status}</span></p>
+                        <p><strong>Chunks:</strong> <span class="chunk-count">${repo.chunkCount}</span></p>
+                    `;
+                    repoInfoDiv.classList.add('visible');
+
+                    if (repo.status === 'READY') {
+                        showSuccess(messageDiv, 'Repository is ready for queries!');
+                        document.getElementById('question').disabled = false;
+                        document.getElementById('queryBtn').disabled = false;
+                        document.getElementById('indexBtn').disabled = true;
+                    } else if (repo.status === 'FAILED') {
+                        showError(messageDiv, 'Repository indexing failed');
+                        document.getElementById('indexBtn').disabled = false;
+                    } else {
+                        messageDiv.innerHTML = `<div class="info-box">Status: <strong>${repo.status}</strong> (${repo.chunkCount} chunks processed)</div>`;
+                        // Auto-check again in 3 seconds if still indexing
+                        if (repo.status !== 'READY') {
+                            setTimeout(checkStatus, 3000);
+                        }
+                    }
+                } else {
+                    showError(messageDiv, data.error || 'Failed to check status');
+                }
+            } catch (error) {
+                showError(messageDiv, 'Error: ' + error.message);
+            }
+        }
+
+        async function queryRepository() {
+            const question = document.getElementById('question').value.trim();
+            const messageDiv = document.getElementById('queryMessage');
+
+            if (!question) {
+                showError(messageDiv, 'Please enter a question');
+                return;
+            }
+
+            if (!currentRepoId) {
+                showError(messageDiv, 'No repository indexed');
+                return;
+            }
+
+            document.getElementById('queryBtn').disabled = true;
+            messageDiv.innerHTML = '<div class="info-box">Processing your question<span class="loading"></span></div>';
+            document.getElementById('resultsSection').classList.add('hidden');
+
+            try {
+                const response = await fetch(`${API_BASE}/repos/${currentRepoId}/query`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ question })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    displayAnswer(data.data);
+                    messageDiv.innerHTML = '';
+                } else {
+                    showError(messageDiv, data.error || 'Failed to process question');
+                }
+            } catch (error) {
+                showError(messageDiv, 'Error: ' + error.message);
+            } finally {
+                document.getElementById('queryBtn').disabled = false;
+            }
+        }
+
+        function displayAnswer(response) {
+            const resultsSection = document.getElementById('resultsSection');
+            const answerDiv = document.getElementById('answer');
+            const sourcesDiv = document.getElementById('sources');
+
+            // Display answer
+            answerDiv.textContent = response.answer;
+
+            // Display sources
+            if (response.sources && response.sources.length > 0) {
+                sourcesDiv.innerHTML = response.sources.map(source => `
+                    <div class="source-item">
+                        <div class="source-path">📄 ${source.filePath}</div>
+                        ${source.startLine ? `<div class="source-lines">Lines ${source.startLine}-${source.endLine}</div>` : ''}
+                    </div>
+                `).join('');
+            } else {
+                sourcesDiv.innerHTML = '<p style="color: #999;">No specific sources found</p>';
+            }
+
+            resultsSection.classList.remove('hidden');
+        }
+
+        function clearResults() {
+            document.getElementById('question').value = '';
+            document.getElementById('resultsSection').classList.add('hidden');
+            document.getElementById('queryMessage').innerHTML = '';
+        }
+
+        function showError(element, message) {
+            element.innerHTML = `<div class="error">❌ ${message}</div>`;
+        }
+
+        function showSuccess(element, message) {
+            element.innerHTML = `<div class="success">✅ ${message}</div>`;
+        }
+
+        // Allow Enter key to submit in textarea
+        document.getElementById('question').addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'Enter') {
+                queryRepository();
+            }
+        });
+    </script>
+</body>
+</html>
