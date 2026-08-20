@@ -143,3 +143,5 @@ playwright-report/
 
 # Local configuration
 *.local
+*.md
+!README.md
